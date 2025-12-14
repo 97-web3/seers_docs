@@ -58,6 +58,7 @@
 - [钱包与支付](integrations/wallet-and-payments.md)
 - [媒体存储](integrations/media-storage.md)
 - [管理/运维提供商](integrations/admin-operations.md)
+- [预言机与争议解决（UMA / Kleros）](integrations/oracle-and-dispute-resolution.md)
 
 ### 横切关注点
 - [身份验证与授权](cross-cutting-concerns/authentication-and-authorization.md)
@@ -73,6 +74,8 @@
 
 ### 术语表
 - [术语表](glossary.md)
+
+
 
 ## 版本控制与变更日志
 | 版本 | 日期 | 变更内容 | 所有者 |

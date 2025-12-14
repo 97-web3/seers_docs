@@ -43,6 +43,12 @@
 | name | 字符串 | 必需 | 名称 |
 | iconUrl | 字符串 | 可选 | 队徽/标志 |
 
+## UserRef
+| 属性 | 类型 | 约束 | 描述 |
+|---|---|---|---|
+| userId | 字符串 | 可选 | 用户标识符（若可用） |
+| displayName | 字符串 | 必需 | 用于 UI 展示的名称 |
+
 ## PredictionMarket
 | 属性 | 类型 | 约束 | 描述 |
 |---|---|---|---|
@@ -50,10 +56,12 @@
 | eventId | 字符串 | 必需 | 来源事件 |
 | sportId | 字符串 | 必需 | 运动类别 |
 | leagueId | 字符串 | 必需 | 联赛 |
+| mode | 字符串 | 必需 | 市场模式；本版本为 `BOOKMAKER` |
+| createdBy | UserRef | 可选 | 创建者信息（展示名/用户标识符） |
 | title | 字符串 | 必需 | 市场标题 |
 | description | 字符串 | 可选 | 市场说明 |
 | marketType | 字符串 | 必需 | 通常与 eventType 一致 |
-| state | 字符串 | 必需 | `ACTIVE`（活跃）、`CLOSED`（关闭）、`SETTLED`（已结算） |
+| state | 字符串 | 必需 | `ACTIVE`（活跃）、`CLOSED`（关闭）、`SETTLED`（已结算）、`DISPUTED`（有争议）、`CANCELLED`（已取消） |
 | participantCount | 整数 | 必需 | 市场中的参与者数量 |
 | totalLiquidity | 货币 | 必需 | 总流动性（市场级别） |
 | cutoffTime | 日期时间 | 必需 | 交易截止时间 |
@@ -62,6 +70,20 @@
 | coverImageUrl | 字符串 | 可选 | 封面图片 |
 | pinnedWeight | 整数 | 可选 | 排序权重 |
 | hotnessScore | 十进制 | 可选 | 派生分数 |
+
+## Adjudication
+| 属性 | 类型 | 约束 | 描述 |
+|---|---|---|---|
+| marketId | 字符串 | 必需 | 市场 |
+| status | 字符串 | 必需 | 参见 `AdjudicationStatus` 枚举 |
+| oracleProvider | 字符串 | 必需 | 预言机提供方（例如 UMA Protocol） |
+| arbitrationProvider | 字符串 | 必需 | 仲裁提供方（例如 Kleros Court） |
+| submittedAt | 日期时间 | 可选 | 候选结果提交时间 |
+| challengeWindowEndsAt | 日期时间 | 可选 | 挑战期结束时间 |
+| disputedAt | 日期时间 | 可选 | 争议被提出的时间 |
+| decidedAt | 日期时间 | 可选 | 最终决定时间 |
+| winningOptionIds | 数组 | 必需 | 结果选项 ID 列表（可为空） |
+| notes | 字符串 | 可选 | 给用户的解释性说明 |
 
 ## Play
 | 属性 | 类型 | 约束 | 描述 |
@@ -82,8 +104,10 @@
 | name | 字符串 | 必需 | 选项名称 |
 | iconUrl | 字符串 | 可选 | 图标 |
 | sharePct | 十进制 | 必需 | 0–100 |
+| oddsDecimal | 十进制 | 可选，> 1 | 十进制赔率（用于潜在回报计算与展示）；如提供，交易报价应以此为准 |
 | backedAmount | 货币 | 必需 | 支持该选项的金额 |
 | locked | 布尔值 | 必需 | 如果为真，则不可操作 |
+| bookmakerSide | 布尔值 | 可选 | 如果为真，表示该选项为创建者（庄家）锁定的持仓/立场；通常应同时视为不可下注 |
 | bookmakerEstimate | 布尔值 | 必需 | 是否标记为估算 |
 
 ## MarketPriceSeries

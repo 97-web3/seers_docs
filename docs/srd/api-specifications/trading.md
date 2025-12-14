@@ -10,6 +10,7 @@ status: 草稿
 
 ## 1. 概述
 支持对市场选项进行报价和下注，并提供幂等性和清晰的验证失败信息。
+本版本要求费用策略端到端一致：报价、扣款与客户端展示必须一致。
 
 ## 2. 接口
 
@@ -34,7 +35,7 @@ status: 草稿
   "marketId": "mkt_001",
   "optionId": "opt_a",
   "stake": { "amount": 50.0, "currency": "USD" },
-  "impliedProbability": 0.48,
+  "oddsDecimal": 2.10,
   "potentialReturn": { "amount": 104.17, "currency": "USD" },
   "feeRate": 0.002,
   "fee": { "amount": 0.10, "currency": "USD" },
@@ -46,6 +47,9 @@ status: 草稿
   }
 }
 ```
+**备注**
+- `oddsDecimal` 为十进制赔率（> 1）。客户端用于显示潜在回报的计算必须使用服务器返回的 `oddsDecimal`。
+- 如需展示“暗含概率/胜率”，可使用 `impliedProbability = 1 / oddsDecimal`（仅用于展示；与市场份额口径是否一致由产品策略决定）。
 
 ### 2.2 下注
 `POST /api/trading/bets`
@@ -83,11 +87,12 @@ status: 草稿
   "marketId": "mkt_001",
   "optionId": "opt_a",
   "stake": { "amount": 50.0, "currency": "USD" },
+  "oddsDecimal": 2.10,
   "fee": { "amount": 0.10, "currency": "USD" },
   "createdAt": "2025-12-14T13:21:00Z"
 }
 ```
 
 ## 3. 错误处理
-- 验证和约束失败必须返回 `VALIDATION_FAILED` 或特定的代码，例如 `LIMIT_EXCEEDED`（超出限制）、`MARKET_CLOSED`（市场已关闭）、`INSUFFICIENT_BALANCE`（余额不足）。
+- 验证和约束失败必须返回 `VALIDATION_FAILED` 或特定的代码，例如 `LIMIT_EXCEEDED`（超出限制）、`MARKET_CLOSED`（市场已结束）、`INSUFFICIENT_BALANCE`（余额不足）。
 - 使用 `api-specifications/common-errors.md` 中的标准错误信封。

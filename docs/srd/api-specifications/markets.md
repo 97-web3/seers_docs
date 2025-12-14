@@ -38,6 +38,8 @@
       "title": "德比：A队 vs B队",
       "startTime": "2025-12-20T12:00:00Z",
       "state": "ACTIVE",
+      "mode": "BOOKMAKER",
+      "createdBy": { "userId": "u_123", "displayName": "Creator_01" },
       "participantCount": 1400,
       "totalLiquidity": { "amount": 5200000, "currency": "USD" },
       "pinnedWeight": 10,
@@ -72,6 +74,8 @@
   "title": "德比：A队 vs B队",
   "description": "预测最终结果。价格反映了人群的隐含概率。市场将于 2025/12/20 12:00 结算。",
   "state": "ACTIVE",
+  "mode": "BOOKMAKER",
+  "createdBy": { "userId": "u_123", "displayName": "Creator_01" },
   "sportId": "football",
   "leagueId": "epl",
   "eventId": "evt_123",
@@ -96,8 +100,10 @@
       "name": "A队",
       "iconUrl": "https://...",
       "sharePct": 48.0,
+      "oddsDecimal": 2.10,
       "backedAmount": { "amount": 2500000, "currency": "USD" },
       "locked": false,
+      "bookmakerSide": false,
       "bookmakerEstimate": false,
       "recentParticipantAvatars": ["https://..."],
       "participantCount": 208
@@ -143,10 +149,15 @@
 **响应 (200)**
 ```json
 {
-  "status": "PENDING",
+  "status": "CHALLENGE_WINDOW",
+  "oracleProvider": "UMA Protocol",
+  "arbitrationProvider": "Kleros Court",
+  "submittedAt": "2025-12-14T12:00:00Z",
+  "challengeWindowEndsAt": "2025-12-14T14:00:00Z",
+  "disputedAt": null,
   "decidedAt": null,
   "winningOptionIds": [],
-  "notes": null
+  "notes": "任何人都可以提交结果；若在挑战期内无人提出异议，该结果将被视为最终结果。若有争议，将进入仲裁。"
 }
 ```
 

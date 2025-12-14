@@ -20,7 +20,7 @@ status: 草稿
   "required": ["amount", "currency"],
   "properties": {
     "amount": { "type": "number" },
-    "currency": { "type": "string", "minLength": 3, "maxLength": 3 }
+    "currency": { "type": "string", "minLength": 3, "maxLength": 10 }
   }
 }
 ```
@@ -34,7 +34,16 @@ status: 草稿
   "properties": {
     "marketId": { "type": "string" },
     "title": { "type": "string" },
-    "state": { "type": "string", "enum": ["ACTIVE", "CLOSED", "SETTLED"] },
+    "state": { "type": "string", "enum": ["ACTIVE", "CLOSED", "SETTLED", "DISPUTED", "CANCELLED"] },
+    "mode": { "type": "string", "enum": ["BOOKMAKER"] },
+    "createdBy": {
+      "type": "object",
+      "required": ["displayName"],
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" }
+      }
+    },
     "sportId": { "type": "string" },
     "leagueId": { "type": "string" },
     "eventId": { "type": "string" },
@@ -49,6 +58,26 @@ status: 草稿
 }
 ```
 
+## 3.1 裁决响应
+```json
+{
+  "$id": "AdjudicationResponse",
+  "type": "object",
+  "required": ["status", "oracleProvider", "arbitrationProvider", "winningOptionIds"],
+  "properties": {
+    "status": { "type": "string", "enum": ["PENDING", "CHALLENGE_WINDOW", "DISPUTED", "DECIDED"] },
+    "oracleProvider": { "type": "string" },
+    "arbitrationProvider": { "type": "string" },
+    "submittedAt": { "type": "string", "format": "date-time" },
+    "challengeWindowEndsAt": { "type": "string", "format": "date-time" },
+    "disputedAt": { "type": "string", "format": "date-time" },
+    "decidedAt": { "type": "string", "format": "date-time" },
+    "winningOptionIds": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}
+```
+
 ## 4. 交易报价请求
 ```json
 {
@@ -59,6 +88,34 @@ status: 草稿
     "marketId": { "type": "string" },
     "optionId": { "type": "string" },
     "stake": { "$ref": "Money" }
+  }
+}
+```
+
+## 4.1 交易报价响应
+```json
+{
+  "$id": "TradeQuoteResponse",
+  "type": "object",
+  "required": ["marketId", "optionId", "stake", "oddsDecimal", "potentialReturn", "feeRate", "fee", "netProfit", "constraints"],
+  "properties": {
+    "marketId": { "type": "string" },
+    "optionId": { "type": "string" },
+    "stake": { "$ref": "Money" },
+    "oddsDecimal": { "type": "number", "exclusiveMinimum": 1 },
+    "potentialReturn": { "$ref": "Money" },
+    "feeRate": { "type": "number", "minimum": 0 },
+    "fee": { "$ref": "Money" },
+    "netProfit": { "$ref": "Money" },
+    "constraints": {
+      "type": "object",
+      "required": ["minStake", "maxStakeByBalance", "maxStakeByLiquidity"],
+      "properties": {
+        "minStake": { "$ref": "Money" },
+        "maxStakeByBalance": { "$ref": "Money" },
+        "maxStakeByLiquidity": { "$ref": "Money" }
+      }
+    }
   }
 }
 ```
@@ -101,6 +158,7 @@ status: 草稿
     "plays": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 1,
       "items": {
         "type": "object",
         "required": ["period", "playType", "initialLiquidity"],

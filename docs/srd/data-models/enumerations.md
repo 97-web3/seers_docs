@@ -14,6 +14,8 @@ status: 草稿
 | ACTIVE | 可交易；截止前允许下注 |
 | CLOSED | 截止时间已过；只读；等待结算 |
 | SETTLED | 已最终确定；结果和支付可用 |
+| DISPUTED | 结果存在争议；只读；等待仲裁决定 |
+| CANCELLED | 市场被取消；只读；退款/回滚策略适用 |
 
 ## 事件类型 (EventType)
 | 值 | 含义 |
@@ -41,8 +43,9 @@ status: 草稿
 | 值 | 含义 |
 |---|---|
 | PENDING | 尚未做出决定 |
+| CHALLENGE_WINDOW | 已提交候选结果；挑战期内可提出异议 |
 | DECIDED | 已宣布获胜选项 |
-| DISPUTED | 存在争议（可选的未来状态） |
+| DISPUTED | 存在争议；仲裁中 |
 
 ## 下注状态 (BetStatus)
 | 值 | 含义 |
